@@ -1,0 +1,14 @@
+---
+# tasks file for wireguard_install
+- name: Install wireguard
+  apt:
+    name: "{{item}}"
+    state: present
+    update_cache: yes
+  loop:
+    - "wireguard"
+    - "iptables"
+    - "resolvconf"
+    - "qrencode"
+
+
