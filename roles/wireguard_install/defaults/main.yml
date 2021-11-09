@@ -1,2 +1,17 @@
 ---
-# defaults file for wireguard_install
+# Packages need to be installed
+package_list:
+  - wireguard
+  - iptables
+  - resolvconf
+  - qrencode
+
+# wireguard parameters
+public_ip: "{{ansible_default_ipv4.address}}"
+public_nic: "{{ansible_default_ipv4.interface}}"
+wg_nic: wg0
+wg_ipv4: 172.16.16.1 #10.66.66.1
+#wg_ipv6: fd42:42:42::1
+wg_port: 51094
+client_dns_1: 94.140.14.14
+client_dns_2: 94.140.15.15
