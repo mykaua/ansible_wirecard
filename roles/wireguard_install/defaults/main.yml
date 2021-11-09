@@ -7,7 +7,8 @@ package_list:
   - qrencode
 
 # wireguard parameters
-public_ip: "{{ansible_default_ipv4.address}}"
+wg_conf_dir: /etc/wireguard
+public_ip: "{{ansible_default_ipv4.address}}"  #hostvars[inventory_hostname]['ansible_default_ipv4']['address']
 public_nic: "{{ansible_default_ipv4.interface}}"
 wg_nic: wg0
 wg_ipv4: 172.16.16.1 #10.66.66.1

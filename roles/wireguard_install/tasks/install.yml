@@ -14,38 +14,5 @@
     state: present
     reload: yes
   loop:
-    - "net.ipv4.ip_forward = 1"
+    - "net.ipv4.ip_forward"
 #    - "net.ipv6.conf.all.forwarding = 1"
-
-- name: Create wireguard config dir
-  file:
-    path: "/etc/wireguard"
-    state: directory
-  register: wg_conf_dir
-
-
-- name: Generate wireguard server keypair
-  shell: |
-    if [ ! -f {{ wg_conf_dir.path }}/privatekey ]
-     then
-      umask 077 && wg genkey | tee {{ wg_conf_dir.path }}/privatekey | wg pubkey > {{ wg_conf_dir.path }}/publickey
-    fi
-    exit 0
-
-- name: Get wireguard private key
-  slurp:
-    src: "{{ wg_conf_dir.path }}/privatekey"
-  register: wg_privatekey
-
-# - debug:
-#     msg: "{{ wg_privatekey['content'] }}"
-
-- name: Get wireguard public key
-  slurp:
-    src: "{{ wg_conf_dir.path }}/publickey"
-  register: wg_publickey
-
-
-- name: debug
-  debug:
-    msg: "private key - {{wg_privatekey}}  && publickey - {{wg_publickey}}"
