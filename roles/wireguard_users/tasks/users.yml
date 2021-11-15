@@ -1,0 +1,55 @@
+---
+- name: create users configuration directory
+  file:
+    path: "{{users_directory}}/{{item.value.username}}"
+    state: directory
+  with_dict: "{{ wg_user_list }}"
+  when: (item.value.remove == false)
+
+- name: remove users configuration directory
+  file:
+    path: "{{ users_directory }}/{{ item.value.username }}"
+    state: absent
+  with_dict: "{{ wg_user_list }}"
+  when: (item.value.remove == true)
+
+- name: Generate Wireguard users key
+  shell: |
+    if [ ! -f {{ users_directory }}/{{ item.value.username }}/user_privatekey ]
+      then
+        cd {{ users_directory }}/{{ item.value.username }}
+        umask 077 && wg genkey | tee user_privatekey | wg pubkey > user_publickey
+        wg genpsk > user_presharedkey
+    fi
+    exit 0
+  when: (item.value.remove == False)
+  with_dict: "{{ wg_user_list }}"
+
+
+- name: Get user private key
+  slurp:
+    src: "{{ users_directory }}/{{ item.value.username }}/user_privatekey"
+  register: user_privatekey
+  with_dict: "{{ wg_user_list }}"
+
+- name: Get user public key
+  slurp:
+    src: "{{ users_directory }}/{{ item.value.username }}/user_publickey"
+  register: user_publickey
+  with_dict: "{{ wg_user_list }}"
+
+- name: Get server publicKey
+  shell: wg show | grep public | awk '{print $3}'
+  register: wg_server_public_key
+
+- name: generate wireguard user config
+  template:
+    src: "wg0-user.j2"
+    dest: "{{users_directory}}/{{item.item.value.username}}/wg0.conf"
+  loop: "{{user_privatekey.results}}"
+  when: (item.item.value.remove == false)
+  notify: restart wg0
+
+#- name: get port of Wireguard
+#  shell: wg show | grep port | awk '{print $3}'
+#  register: wg_port

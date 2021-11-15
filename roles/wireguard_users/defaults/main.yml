@@ -1,0 +1,19 @@
+---
+# defaults file for wireguard_users
+public_ip: "{{ansible_default_ipv4.address}}"
+wg_port: 51094
+allowed_ips: 0.0.0.0/0
+users_directory: /etc/wireguard/users
+client_dns_1: 94.140.14.14
+client_dns_2: 94.140.15.15
+
+# user parameter
+wg_user_list:
+  user_1:
+    username: myka
+    wg_private_ip: 172.16.16.2
+    remove: false
+  user_2:
+    username: hello
+    wg_private_ip: 172.16.16.3
+    remove: false
