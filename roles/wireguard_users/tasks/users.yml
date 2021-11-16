@@ -31,12 +31,14 @@
     src: "{{ users_directory }}/{{ item.value.username }}/user_privatekey"
   register: user_privatekey
   with_dict: "{{ wg_user_list }}"
+  when: (item.value.remove == false)
 
 - name: Get user public key
   slurp:
     src: "{{ users_directory }}/{{ item.value.username }}/user_publickey"
   register: user_publickey
   with_dict: "{{ wg_user_list }}"
+  when: (item.value.remove == false)
 
 - name: Get server publicKey
   shell: wg show | grep public | awk '{print $3}'
@@ -45,11 +47,44 @@
 - name: generate wireguard user config
   template:
     src: "wg0-user.j2"
-    dest: "{{users_directory}}/{{item.item.value.username}}/wg0.conf"
+    dest: "{{users_directory}}/{{item.item.value.username}}/wg0-{{item.item.value.username}}.conf"
   loop: "{{user_privatekey.results}}"
   when: (item.item.value.remove == false)
+  notify: restart wg0
+  register: user_profile
+
+#- name: debug
+#  debug:
+#    msg: "{{item}}"
+#  loop: "{{user_publickey.results}}"
+
+- name: insert user configuration to wireguard
+  blockinfile:
+    path: /etc/wireguard/wg0.conf
+    state: present
+    marker: "# {mark} user config {{ item.item.value.username }}"
+    block: "{{ lookup('template', 'wg-config.j2') }}"
+  loop: "{{user_publickey.results}}"
+  when: (item.item.value.remove == false)
+  notify: restart wg0
+
+- name: remove user configuration from wireguard
+  blockinfile:
+    path: /etc/wireguard/wg0.conf
+    state: absent
+    marker: "# {mark} user config {{ item.item.value.username }}"
+    block: "{{ lookup('template', 'wg-config.j2') }}"
+  loop: "{{user_publickey.results}}"
+  when: (item.item.value.remove == true)
   notify: restart wg0
 
 #- name: get port of Wireguard
 #  shell: wg show | grep port | awk '{print $3}'
 #  register: wg_port
+
+- name: Fetch Wireguard users configs
+  fetch:
+    src: "{{item.dest}}"
+    dest: "{{ download_path }}"
+  loop: "{{ user_profile.results }}"
+  when: (item.item.item.value.remove == False)
