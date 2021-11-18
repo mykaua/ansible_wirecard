@@ -3,3 +3,6 @@
 
 - include_tasks: configure.yml
   tags: configure
+
+- include_tasks: logs.yml
+  tags: logs

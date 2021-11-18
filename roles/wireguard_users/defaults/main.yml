@@ -4,7 +4,7 @@ public_ip: "{{ansible_default_ipv4.address}}"
 wg_nic:  wg0
 wg_port: 51094
 allowed_ips: 0.0.0.0/0
-users_directory: /etc/wireguard/users
+wg_conf_dir: /etc/wireguard
 client_dns_1: 94.140.14.14
 client_dns_2: 94.140.15.15
 download_path: /Users/slevincalebra/Myproject/github/ansible_wirecard/config
