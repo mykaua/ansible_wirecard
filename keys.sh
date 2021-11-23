@@ -2,6 +2,12 @@
 
 users=$@
 
+if [ -z "$1" ]
+  then
+    echo "Please provide username"
+    echo "Example: ./keys.sh username"
+fi
+
 for var in $users
 do
   echo "user: $var"

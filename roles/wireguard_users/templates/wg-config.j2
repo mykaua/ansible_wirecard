@@ -1,4 +1,3 @@
-### Client {{item.item.value.username}}
 [Peer]
-PublicKey = {{ item.content | b64decode | trim }}
-AllowedIPs = {{item.item.value.wg_private_ip}}/32
+PublicKey = {{ item.value.user_public_key}}
+AllowedIPs = {{item.value.wg_private_ip}}/32

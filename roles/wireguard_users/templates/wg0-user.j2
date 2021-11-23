@@ -1,6 +1,6 @@
 [Interface]
-PrivateKey = {{ item.content | b64decode | trim }}
-Address = {{ item.item.value.wg_private_ip }}/24
+PrivateKey = {{ item.value.user_private_key }}
+Address = {{ item.value.wg_private_ip }}/24
 DNS = {{ client_dns_1 }},{{client_dns_2}}
 
 [Peer]
