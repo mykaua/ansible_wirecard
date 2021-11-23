@@ -23,6 +23,7 @@ package_list | wireguard,iptables, resolvconf| list|Packages fro installing wire
 |wg_ipv4 | 172.16.16.1| string | Wireguard IP |
 |wg_port| 51094 | string | Wireguard Port|
 
+
   * wireguard_users - /roles/wireguard_users/defaults/main.yml
 
 | Variables      | Default |type |Descrription|
@@ -32,15 +33,14 @@ package_list | wireguard,iptables, resolvconf| list|Packages fro installing wire
 |wg_port| 51094 | string | Wireguard Port|
 |allowed_ips| 0.0.0.0/0 | string| allowed IPs|
 |wg_conf_dir | /etc/wireguard | string | directory of wireguard configuration |
-|client_dns_1 | 94.140.14.14 | string | IP of DNS|
-|client_dns_2 | 94.140.15.15| string | Second IP of DNS |
+|client_dns_1 | 8.8.8.8 | string | IP of DNS|
+|client_dns_2 | 8.8.4.4 | string | Second IP of DNS |
 |download_path | ./ansible_wirecard/config| string | path for saving client configs|
 | wg_user_list |   user_1: username: myka wg_private_ip: 172.16.16.2    remove: false | dict | User parameters: username, ip for wireguard and status of user|
 
 
 ### Example Playbook
 ```
----
 ---
 - name: install wireguard
   hosts: all
@@ -67,8 +67,8 @@ package_list | wireguard,iptables, resolvconf| list|Packages fro installing wire
         wg_port: 51094
         allowed_ips: 0.0.0.0/0
         wg_conf_dir: /etc/wireguard
-        client_dns_1: 94.140.14.14
-        client_dns_2: 94.140.15.15
+        client_dns_1: 8.8.8.8
+        client_dns_2: 8.8.4.4
         download_path: /Users/slevincalebra/Myproject/github/ansible_wirecard/config
         wg_user_list:
           user_1:
@@ -82,5 +82,7 @@ package_list | wireguard,iptables, resolvconf| list|Packages fro installing wire
 ### Additional
 
 https://www.wireguard.com
+
 https://github.com/angristan/wireguard-install
+
 https://www.procustodibus.com/blog/2021/03/wireguard-logs/
