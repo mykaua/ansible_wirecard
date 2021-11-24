@@ -12,7 +12,7 @@ download_path: /Users/slevincalebra/Myproject/github/ansible_wirecard/config
 # user parameter
 wg_user_list:
   user_1:
-    username: myka
+#    username: myka
     wg_private_ip: 172.16.16.2
     user_private_key: !vault |
           $ANSIBLE_VAULT;1.1;AES256
@@ -25,7 +25,7 @@ wg_user_list:
     user_public_key: I/jfQZGhfLdWIqRDTwS5Cpb3DzAmzGkqqUNUu/RLTlA=
     remove: false
   user_2:
-    username: hello
+#    username: hello
     wg_private_ip: 172.16.16.3
     remove: false
     user_private_key: !vault |
